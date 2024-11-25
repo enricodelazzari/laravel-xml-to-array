@@ -25,8 +25,6 @@ Convert an XML string to an array:
 ```php
 use EnricoDeLazzari\XmlToArray\Facades\XmlToArray;
 
-use YourVendorName\XmlToArray\Facades\XmlToArray;
-
 $xml = <<<XML
 <root>
     <Good_guy attr1="value">
