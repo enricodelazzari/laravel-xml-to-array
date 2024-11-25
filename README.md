@@ -18,32 +18,6 @@ You can install the package via composer:
 composer require enricodelazzari/laravel-xml-to-array
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-xml-to-array-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-xml-to-array-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-xml-to-array-views"
-```
-
 ## Usage
 
 Convert an XML string to an array:
