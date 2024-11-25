@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace EnricoDeLazzari\XmlToArray;
 
+use EnricoDeLazzari\XmlToArray\Commands\XmlToArrayCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class XmlToArrayServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,10 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('laravel-xml-to-array')
             ->hasConfigFile()
             ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasMigration('create_laravel_xml_to_array_table')
+            ->hasCommand(XmlToArrayCommand::class);
     }
 }

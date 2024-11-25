@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace EnricoDeLazzari\XmlToArray\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class XmlToArrayCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-xml-to-array';
 
     public $description = 'My command';
 

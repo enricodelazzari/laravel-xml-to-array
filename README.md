@@ -1,24 +1,18 @@
-# :package_description
+# XML to Array
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+> [!WARNING]  
+> This is still a work in progress software. Use with caution.
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/enricodelazzari/laravel-xml-to-array.svg?style=flat-square)](https://packagist.org/packages/enricodelazzari/laravel-xml-to-array)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/enricodelazzari/laravel-xml-to-array/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/enricodelazzari/laravel-xml-to-array/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/enricodelazzari/laravel-xml-to-array/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/enricodelazzari/laravel-xml-to-array/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/enricodelazzari/laravel-xml-to-array.svg?style=flat-square)](https://packagist.org/packages/enricodelazzari/laravel-xml-to-array)
+
+Easily convert XML to PHP arrays in your Laravel projects.
 
 ## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-xml-to-array.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-xml-to-array)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
@@ -29,20 +23,20 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require enricodelazzari/laravel-xml-to-array
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --tag="laravel-xml-to-array-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="laravel-xml-to-array-config"
 ```
 
 This is the contents of the published config file:
@@ -55,16 +49,96 @@ return [
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-views"
+php artisan vendor:publish --tag="laravel-xml-to-array-views"
 ```
 
 ## Usage
 
+Convert an XML string to an array:
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+use EnricoDeLazzari\XmlToArray\Facades\XmlToArray;
+
+use YourVendorName\XmlToArray\Facades\XmlToArray;
+
+$xml = <<<XML
+<root>
+    <Good_guy attr1="value">
+        <name>Luke Skywalker</name>
+        <weapon>Lightsaber</weapon>
+    </Good_guy>
+</root>
+XML;
+
+$result = XmlToArray::convert($xml);
+
+/* Result:
+[
+    'Good_guy' => [
+        '_attributes' => ['attr1' => 'value'],
+        'name' => 'Luke Skywalker',
+        'weapon' => 'Lightsaber'
+    ]
+]
+*/
+
 ```
 
+#Example with Nested Elements and Attributes
+```php
+$xml = <<<XML
+<root>
+    <Bad_guy>
+        <name>Sauron</name>
+        <weapon>Evil Eye</weapon>
+    </Bad_guy>
+    <The_survivor house="Hogwarts">Harry Potter</The_survivor>
+</root>
+XML;
+
+$result = XmlToArray::convert($xml);
+
+/* Result:
+[
+    'Bad_guy' => [
+        'name' => 'Sauron',
+        'weapon' => 'Evil Eye'
+    ],
+    'The_survivor' => [
+        '_attributes' => ['house' => 'Hogwarts'],
+        '_value' => 'Harry Potter'
+    ]
+]
+*/
+```
+#Example with Multiple Elements
+```php
+$xml = <<<XML
+<root>
+    <item>value1</item>
+    <item>value2</item>
+</root>
+XML;
+
+$result = XmlToArray::convert($xml);
+
+/* Result:
+[
+    'item' => ['value1', 'value2']
+]
+*/
+```
+#Handling Invalid XML
+If the XML is invalid, an exception is thrown:
+```php
+$invalidXml = '<root><item></root>';
+
+try {
+    $result = XmlToArray::convert($invalidXml);
+} catch (\Exception $e) {
+    echo $e->getMessage(); // "Invalid XML provided"
+}
+```
 ## Testing
 
 ```bash
@@ -85,7 +159,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Enrico De Lazzari](https://github.com/enricodelazzari)
 - [All Contributors](../../contributors)
 
 ## License
